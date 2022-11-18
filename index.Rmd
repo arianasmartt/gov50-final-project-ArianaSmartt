@@ -150,6 +150,7 @@ ggplot(tablesofall, aes(x= WRSERVC)) +
 
 
 ```
+From this linegraph, we see that good works fluctuate with church attendance. For some good works, like donating money and food, my hypothesis was correct and there's a correlation between attendance and doing good.However, different acts like caring for the sick, helping the community, and helping someone find a job were not so straight-forward. 
 ```{r}
 
 worksbydenom <- mydata |>
