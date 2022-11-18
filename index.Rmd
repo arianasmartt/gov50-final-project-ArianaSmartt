@@ -47,4 +47,121 @@ ggplot(data = mydata, mapping = aes(x = attendance)) +
 
 
 ```
+```{r}
+balance_table <- mydata|>
+  group_by(attendance)|>
+  summarize(avg_age = mean(I_AGE, na.rm=TRUE), 
+             avg_male = mean(I_GENDER, na.rm=TRUE),
+           avg_income = mean(I_INCOME, na.rm=TRUE) )
+
+knitr::kable(balance_table, 
+col.names= c("Attendance", "Average Age", "Average Gender", "Average Income"))
+```
+```{r}
+##cared for sick?
+
+highattendence_mean <- mydata |>
+  filter(WRSERVC == 6) |>
+  summarize(highattendence_mean = mean(MN12SCS)) #0.1922
+
+highattendence_mean
+
+lowat_mean <-  mydata |>
+  filter(WRSERVC == 1) |>
+  summarize(lowat_mean = mean(MN12SCS)) #0.2296
+
+lowat_mean
+
+two_mean <-  mydata |>
+  filter(WRSERVC == 2) |>
+  summarize(two_mean = mean(MN12SCS)) #0.2165
+
+two_mean
+
+seven_mean <-  mydata |>
+  filter(WRSERVC == 7) |>
+  summarize(seven_mean = mean(MN12SCS)) #0.281
+
+seven_mean
+
+
+table_scsmean <- mydata|> 
+  group_by(WRSERVC) |>
+  summarize(avg_scs = mean(MN12SCS)) |>
+  pivot_wider(
+      names_from = WRSERVC,
+      values_from = avg_scs)
+
+knitr::kable(table_scsmean, digits=3)
+
+```
+```{r}
+
+table_sdmmean <- mydata|> 
+  group_by(WRSERVC) |>
+  summarize(avg_sdm = mean(MN12SDM, na.rm=TRUE)) |>
+  pivot_wider(
+      names_from = WRSERVC,
+      values_from = avg_sdm)
+
+knitr::kable(table_sdmmean, digits=3)
+
+table_sdfmean <- mydata|> 
+  group_by(WRSERVC) |>
+  summarize(avg_sdf = mean(MN12SDF, na.rm=TRUE)) |>
+  pivot_wider(
+      names_from = WRSERVC,
+      values_from = avg_sdf)
+
+knitr::kable(table_sdfmean, digits=3)
+
+tablesofall <- mydata |>
+  group_by(WRSERVC) |>
+  summarize(avg_sdf = mean(MN12SDF, na.rm=TRUE),
+            avg_sdm = mean(MN12SDM, na.rm=TRUE),
+            avg_scs = mean(MN12SCS, na.rm=TRUE),
+            avg_scp = mean(MN12SCP, na.rm=TRUE),
+            avg_OJ = mean(MN12OJ, na.rm=TRUE) ) 
+
+tablesofall
+
+knitr::kable(tablesofall, digits=3,
+              col.names = c("attendance", "fed the poor?","donated?", "cared for sick?", "community", "job?"))
+
+
+  
+
+
+
+
+
+```
+
+```{r}
+
+
+ggplot(tablesofall, aes(x= WRSERVC)) + 
+  geom_line(aes(y = avg_sdf), color = "blue") + 
+  geom_line(aes(y = avg_sdm), color="brown", linetype="twodash") +
+  geom_line(aes(y = avg_scs), color="green") +
+  geom_line(aes(y = avg_scp), color="purple") +
+   geom_line(aes(y = avg_OJ), color="red") 
+
+
+
+```
+```{r}
+
+worksbydenom <- mydata |>
+  group_by(DENFAM1) |>
+  summarize(av_sdf = mean(MN12SDF, na.rm=TRUE),
+            av_sdm = mean(MN12SDM, na.rm=TRUE),
+            av_scs = mean(MN12SCS, na.rm=TRUE),
+            av_scp = mean(MN12SCP, na.rm=TRUE),
+            av_OJ = mean(MN12OJ, na.rm=TRUE) ) 
+
+knitr::kable(worksbydenom, digits=3,
+              col.names = c("denomination", "fed the poor?","donated?", "cared for sick?", "community", "job?"))
+
+```
 
