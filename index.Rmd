@@ -165,4 +165,49 @@ knitr::kable(worksbydenom, digits=3,
               col.names = c("denomination", "fed the poor?","donated?", "cared for sick?", "community", "job?"))
 
 ```
+```{r}
+denomincome <- mydata |>
+  group_by(DENFAM1) |>
+  summarize(av_inc = mean(I_INCOME, na.rm=TRUE))
+            
+denomincome
+
+knitr::kable(denomincome, digits=3)
+            
+```
+```{r}
+#correlation
+
+cor_daydon <- cor(mydata$WRSERVC, mydata$MN12SDM, use="pairwise")
+
+cor_daydon
+
+cor_dayfed <- cor(mydata$WRSERVC, mydata$MN12SDF, use="pairwise")
+
+cor_dayfed
+
+
+corattend <- mydata |>
+  group_by(WRSERVC) |>
+  summarize(co_sdf =cor(mydata$WRSERVC, mydata$MN12SDF, use="pairwise"),
+            cor_sdm = cor(mydata$WRSERVC, mydata$MN12SDM, use="pairwise"),
+            cor_scs = cor(mydata$WRSERVC, mydata$MN12SCS, use="pairwise"),
+            cor_scp = cor(mydata$WRSERVC, mydata$MN12SCP, use="pairwise"),
+            cor_OJ = cor(mydata$WRSERVC, mydata$MN12OJ, use="pairwise")) 
+
+knitr::kable(corattend, digits=3,
+              col.names = c("attendance", "fed the poor?","donated?", "cared for sick?", "community", "job?"))
+
+
+```
+```{r}
+#regression donating
+
+attendance_donating <- lm(MN12SDM ~ WRSERVC, data = mydata)
+
+
+summary(attendance_donating)
+```
+
+The WRSERVC coefficient of 0.023 summarizes the relationship between the donating and attendance variables. Because that the sign is positive, it is suggested that there is a positive relationship between these two variables, meaning those that attend church more regularly also tend to have donated. For every increase of 1 unit in attendance, there is an associated increase of, on average, 0.023 units of having donated. 
 
