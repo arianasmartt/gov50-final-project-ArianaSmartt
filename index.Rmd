@@ -1,6 +1,6 @@
 ---
 title: "Does Going to Church Actually Lead to Doing Good Works?: Looking at the Relationship between Church Attendance and Helping Others"
-"
+
 author: Ariana Smartt
 description: "My final project"
 output:
@@ -61,24 +61,6 @@ Then, I ran a simple linear regression analysis of the attendance variable and t
 
 ```{r}
 
-table_sdmmean <- mydata|> 
-  group_by(WRSERVC) |>
-  summarize(avg_sdm = mean(MN12SDM, na.rm=TRUE)) |>
-  pivot_wider(
-      names_from = WRSERVC,
-      values_from = avg_sdm)
-
-knitr::kable(table_sdmmean, digits=3)
-
-table_sdfmean <- mydata|> 
-  group_by(WRSERVC) |>
-  summarize(avg_sdf = mean(MN12SDF, na.rm=TRUE)) |>
-  pivot_wider(
-      names_from = WRSERVC,
-      values_from = avg_sdf)
-
-knitr::kable(table_sdfmean, digits=3)
-
 tablesofall <- mydata |>
   group_by(WRSERVC) |>
   summarize(avg_sdf = mean(MN12SDF, na.rm=TRUE),
@@ -120,7 +102,8 @@ attendance_donating <- lm(MN12SDM ~ WRSERVC, data = mydata)
 summary(attendance_donating)
 ```
 
-##Conclusion
+
+## Conclusion 
 
 From this line graph, we see that good works fluctuate with church attendance. For some good works, donating money and food, my hypothesis was correct and there's a positive correlation between attendance and doing good. However, caring for the sick, helping the community, and helping someone find a job were not so straight-forward. Their lines do not steadily trend up with church attendance. Running a simple linear regression with the attendance variable and the donating money variable, we see more data that complicates my hypothesis. Though a churchgoer may not be able to help someone find a job if they don’t know anyone looking for a job, every churchgoer can donate money. Looking at the regression for church attendance and donating to charity, it’s clear that there’s a positive relationship. The WRSERVC coefficient of 0.023 summarizes the relationship between the donating and attendance variables. Because that the sign is positive, it is suggested that there is a positive relationship between these two variables, meaning those that attend church more regularly also tend to have donated. For every increase of 1 unit in attendance, there is an associated increase of, on average, 0.023 units of having donated. However, the strength of the association is not very strong since the value of the coefficient is relatively low. Moreover, I can only state that there is an associated increase and not necessarily a causal increase. For example, perhaps it’s not that going to church more directly causes one to donate to charity per se. If someone was particularly devout, they would attend church more and probably donate more. If someone was retired, they might have more time to go to church and do good works. There are different confounding variables that preclude me from determining that going to church leads to doing more good. However, this study shows that those that go to church more are slightly more likely to have donated money in the last year. 
 
