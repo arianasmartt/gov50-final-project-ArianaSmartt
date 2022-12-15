@@ -1,27 +1,30 @@
 ---
-title: "Gov 50 Final Project"
+title: "Does Going to Church Actually Lead to Doing Good Works?: Looking at the Relationship between Church Attendance and Helping Others"
+"
 author: Ariana Smartt
 description: "My final project"
 output:
   distill::distill_article:
     self_contained: false
 ---
-
-
-
-## Project thoughts
-
-I am interested in exploring data related to how religious views impact policy preferences. I'm wondering how religiosity and opinions about issues like government welfare interact. I'm also wondering how religiosity impacts party attachment. The data I'm interested in is ANES survey questions from 1956-2020. This data allows me to look at trends in voting patterns and religiosity over time. 
-
-## Data
-
-Does more church attendance lead to more good acts? In this study, I plan to examine the relationship between frequency of worship and acts of kindness. I hypothesize that the more one attends church, the more good acts they will report to have done in the last 12 months. I project this because I think that more exposure to messages of generosity and self-sacrifice would lead to more charitable behavior. The sample I’ll be using to investigate this is a 2001 survey of nearly 60,000 church attenders across all the major denominations. My unit of analysis is an attender. The explanatory variable of interest is their church attendance. The variable is coded from 1 to 7, 1 being not often to 7 being more than once a week. My outcome variable is whether they report doing good deeds. The variable is coded =1 for checked and =0 for unchecked. If I observe more good deeds when attendance is higher, this would provide support for my hypothesis. If, on the other hand, I observe fewer good deeds among those with higher attendance, this would provide evidence against my hypothesis. When I run my regression of the amount of good deeds related to church attendance, a positive, significant coefficient would indicate support for my hypothesis.
-
-
 ```{r}
 library(tidyverse)
 library(ggplot2)
 ```
+
+
+## Introduction
+
+Does Going to Church Actually Lead to Doing Good Works?: Looking at the Relationship between Church Attendance and Helping Others
+
+After a long week of classes, staying up late for work and friends, and having such little time on the weekend, it’s difficult to wake up at 8am to go to church. It’s on these mornings when I’m tempted to go back to bed that I ask myself, “How much does going to church really matter?” As a Christian, I’ve been taught that it’s crucially important to go every week. But does it really have an effect on me and others? Does going to church more actually change behavior? With all the emphasis Christianity puts on church attendance, one would think it does. In this study, I test this theory by looking at how frequently Christians attend church and if they’ve helped someone in the last month. I hypothesize that those that attend church more often during the month would be more likely to do a good act, like donating money or caring for the sick. Theoretically, more exposure to Christian messages of generosity and self-sacrifice should lead to more charitable behavior. But many would argue that good messages don’t actually translate into good behavior. If there is a strong relationship between attendance and generous behavior, then there are implications for those studying religion and wanting to improve society. If church attendance does lead to helping others more, then the overall decrease in church attendance across the United States does not bode well for our society and culture.
+
+
+## Data
+
+The sample I’ll be using to investigate this is a 2001 survey of nearly random 60,000 church attenders across all the major denominations. The survey was conducted by The National Opinion Research Center (NORC) at the University of Chicago. My unit of analysis is an attender. The explanatory variable of interest is their church attendance. The variable is coded from 1 to 7, 1 being not often to 7 being more than once a week. My outcome variable is whether they report doing good deeds. There are 5 good deeds this study measured that I’m interested in:  caring for the sick, donating food, donating money, working to solve a community problem, and helping someone find a job. The good act I’m most interested in is whether or not they donated to charity, since circumstances may affect whether the churchgoer knows someone who needs a job or if their community has a problem but nearly everyone has the opportunity to donate to charity. For each good deed, the variable is coded =1 for if they did it in the last year and =0 if they didn’t do it in the last year. If I observe doing good deeds more likely when attendance is higher, this would provide support for my hypothesis. If, on the other hand, I observe fewer good deeds among those with higher attendance, this would provide evidence against my hypothesis. Since I’m comparing groups at a single point in time, this is a cross-sectional study. When I run my regression of doing a good deed related to church attendance, a positive, significant coefficient would indicate support for my hypothesis. 
+
+Here is a bar graph that charts attendance among churchgoers. As you can see, most of the church goers go every week. 
 
 
 
@@ -47,54 +50,15 @@ ggplot(data = mydata, mapping = aes(x = attendance)) +
 
 
 ```
-```{r}
-balance_table <- mydata|>
-  group_by(attendance)|>
-  summarize(avg_age = mean(I_AGE, na.rm=TRUE), 
-             avg_male = mean(I_GENDER, na.rm=TRUE),
-           avg_income = mean(I_INCOME, na.rm=TRUE) )
 
-knitr::kable(balance_table, 
-col.names= c("Attendance", "Average Age", "Average Gender", "Average Income"))
-```
-```{r}
-##cared for sick?
+## Results
 
-highattendence_mean <- mydata |>
-  filter(WRSERVC == 6) |>
-  summarize(highattendence_mean = mean(MN12SCS)) #0.1922
+To look at the relationship between church attendance and helping others, I charted all of the good works measured by the study across differing attendance in a line graph.
 
-highattendence_mean
-
-lowat_mean <-  mydata |>
-  filter(WRSERVC == 1) |>
-  summarize(lowat_mean = mean(MN12SCS)) #0.2296
-
-lowat_mean
-
-two_mean <-  mydata |>
-  filter(WRSERVC == 2) |>
-  summarize(two_mean = mean(MN12SCS)) #0.2165
-
-two_mean
-
-seven_mean <-  mydata |>
-  filter(WRSERVC == 7) |>
-  summarize(seven_mean = mean(MN12SCS)) #0.281
-
-seven_mean
+Then, I ran a simple linear regression analysis of the attendance variable and the donating to charity variable, a good work I deemed the most accessible.
 
 
-table_scsmean <- mydata|> 
-  group_by(WRSERVC) |>
-  summarize(avg_scs = mean(MN12SCS)) |>
-  pivot_wider(
-      names_from = WRSERVC,
-      values_from = avg_scs)
 
-knitr::kable(table_scsmean, digits=3)
-
-```
 ```{r}
 
 table_sdmmean <- mydata|> 
@@ -129,12 +93,6 @@ knitr::kable(tablesofall, digits=3,
               col.names = c("attendance", "fed the poor?","donated?", "cared for sick?", "community", "job?"))
 
 
-  
-
-
-
-
-
 ```
 
 ```{r}
@@ -145,61 +103,14 @@ ggplot(tablesofall, aes(x= WRSERVC)) +
   geom_line(aes(y = avg_sdm), color="brown", linetype="twodash") +
   geom_line(aes(y = avg_scs), color="green") +
   geom_line(aes(y = avg_scp), color="purple") +
-   geom_line(aes(y = avg_OJ), color="red") 
-
-
-
-```
-From this linegraph, we see that good works fluctuate with church attendance. For some good works, like donating money and food, my hypothesis was correct and there's a correlation between attendance and doing good.However, different acts like caring for the sick, helping the community, and helping someone find a job were not so straight-forward. 
-```{r}
-
-worksbydenom <- mydata |>
-  group_by(DENFAM1) |>
-  summarize(av_sdf = mean(MN12SDF, na.rm=TRUE),
-            av_sdm = mean(MN12SDM, na.rm=TRUE),
-            av_scs = mean(MN12SCS, na.rm=TRUE),
-            av_scp = mean(MN12SCP, na.rm=TRUE),
-            av_OJ = mean(MN12OJ, na.rm=TRUE) ) 
-
-knitr::kable(worksbydenom, digits=3,
-              col.names = c("denomination", "fed the poor?","donated?", "cared for sick?", "community", "job?"))
+   geom_line(aes(y = avg_OJ), color="red") +
+  labs(x= "Church Attendance", y= "Average That Did Good Act",
+       color= "Legend") +
+    scale_color_manual(values = colors)
 
 ```
-```{r}
-denomincome <- mydata |>
-  group_by(DENFAM1) |>
-  summarize(av_inc = mean(I_INCOME, na.rm=TRUE))
-            
-denomincome
-
-knitr::kable(denomincome, digits=3)
-            
-```
-```{r}
-#correlation
-
-cor_daydon <- cor(mydata$WRSERVC, mydata$MN12SDM, use="pairwise")
-
-cor_daydon
-
-cor_dayfed <- cor(mydata$WRSERVC, mydata$MN12SDF, use="pairwise")
-
-cor_dayfed
-
-
-corattend <- mydata |>
-  group_by(WRSERVC) |>
-  summarize(co_sdf =cor(mydata$WRSERVC, mydata$MN12SDF, use="pairwise"),
-            cor_sdm = cor(mydata$WRSERVC, mydata$MN12SDM, use="pairwise"),
-            cor_scs = cor(mydata$WRSERVC, mydata$MN12SCS, use="pairwise"),
-            cor_scp = cor(mydata$WRSERVC, mydata$MN12SCP, use="pairwise"),
-            cor_OJ = cor(mydata$WRSERVC, mydata$MN12OJ, use="pairwise")) 
-
-knitr::kable(corattend, digits=3,
-              col.names = c("attendance", "fed the poor?","donated?", "cared for sick?", "community", "job?"))
-
-
-```
+       
+       
 ```{r}
 #regression donating
 
@@ -209,5 +120,11 @@ attendance_donating <- lm(MN12SDM ~ WRSERVC, data = mydata)
 summary(attendance_donating)
 ```
 
-The WRSERVC coefficient of 0.023 summarizes the relationship between the donating and attendance variables. Because that the sign is positive, it is suggested that there is a positive relationship between these two variables, meaning those that attend church more regularly also tend to have donated. For every increase of 1 unit in attendance, there is an associated increase of, on average, 0.023 units of having donated. 
+##Conclusion
+
+From this line graph, we see that good works fluctuate with church attendance. For some good works, donating money and food, my hypothesis was correct and there's a positive correlation between attendance and doing good. However, caring for the sick, helping the community, and helping someone find a job were not so straight-forward. Their lines do not steadily trend up with church attendance. Running a simple linear regression with the attendance variable and the donating money variable, we see more data that complicates my hypothesis. Though a churchgoer may not be able to help someone find a job if they don’t know anyone looking for a job, every churchgoer can donate money. Looking at the regression for church attendance and donating to charity, it’s clear that there’s a positive relationship. The WRSERVC coefficient of 0.023 summarizes the relationship between the donating and attendance variables. Because that the sign is positive, it is suggested that there is a positive relationship between these two variables, meaning those that attend church more regularly also tend to have donated. For every increase of 1 unit in attendance, there is an associated increase of, on average, 0.023 units of having donated. However, the strength of the association is not very strong since the value of the coefficient is relatively low. Moreover, I can only state that there is an associated increase and not necessarily a causal increase. For example, perhaps it’s not that going to church more directly causes one to donate to charity per se. If someone was particularly devout, they would attend church more and probably donate more. If someone was retired, they might have more time to go to church and do good works. There are different confounding variables that preclude me from determining that going to church leads to doing more good. However, this study shows that those that go to church more are slightly more likely to have donated money in the last year. 
+
+
+
+
 
