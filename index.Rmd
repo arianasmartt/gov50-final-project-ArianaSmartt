@@ -45,7 +45,7 @@ mydata <- mydata|>
           
           
 
-ggplot(data = mydata, mapping = aes(x = attendance)) +
+ggplot(data = mydata, mapping = aes(x = attendance, title = "Number of Churchgoers and Attendance")) +
   geom_bar()
 
 
@@ -87,8 +87,9 @@ ggplot(tablesofall, aes(x= WRSERVC)) +
   geom_line(aes(y = avg_scp), color="purple") +
    geom_line(aes(y = avg_OJ), color="red") +
   labs(x= "Church Attendance", y= "Average That Did Good Act",
-       color= "Legend") +
+       color= "Legend", title = "Church Attendance and Average that Did Deed") +
     scale_color_manual(values = colors)
+
 
 ```
        
