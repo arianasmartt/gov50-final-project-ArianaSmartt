@@ -46,7 +46,7 @@ mydata <- mydata|>
           
 
 ggplot(data = mydata, mapping = aes(x = attendance)) +
-  geom_bar() + labs(title= "Churchgoers' Attendance")
+  geom_bar() + labs(title= "Churchgoers' Attendance") 
 
 
 ```
